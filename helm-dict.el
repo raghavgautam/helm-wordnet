@@ -9,8 +9,9 @@
 ;; See <http://www.gnu.org/licenses/>.
 ;;
 ;;; Commentary:
-;; Enables helm to look up dictionary words.
-;;
+;; Enables helm to look up dictionary.
+;; Default configuration works with WordNet on OSX.
+;; For other dictionaries configure: helm-dict-prog, helm-dict-pre-arg, helm-dict-post-arg & helm-dict-get-wordlist
 ;;; Code:
 
 (require 'helm)
@@ -23,7 +24,7 @@
   :type 'number
   :group 'helm-dict)
 
-(defcustom helm-dict-dictionary-location "/opt/local/share/WordNet-3.0/dict"
+(defcustom helm-dict-wordnet-location "/opt/local/share/WordNet-3.0/dict"
   "Delay before Dictionary summary popup."
   :type 'string
   :group 'helm-dict)
@@ -43,7 +44,7 @@
   :type 'string
   :group 'helm-dict)
 
-(defcustom helm-dict-get-wordlist 'helm-dict-wn-candidates
+(defcustom helm-dict-get-wordlist 'helm-dict-wordnet-wordlist
   "Function for getting list of words in dictionary."
   :type 'symbol-function
   :group 'helm-dict)
@@ -58,9 +59,9 @@
     (setq helm-dict-allwords (funcall helm-dict-get-wordlist)))
   helm-dict-allwords)
 
-(defun helm-dict-wn-candidates ()
+(defun helm-dict-wordnet-wordlist ()
   "Fetch WordNet suggestions and return them as a list."
-  (let* ((all-indexes (directory-files helm-dict-dictionary-location t "index\\..*" ))
+  (let* ((all-indexes (directory-files helm-dict-wordnet-location t "index\\..*" ))
 	 (word-indexes (remove-if (lambda (x) (string-match-p "index\\.sense$" x)) all-indexes)))
     (mapcan
      (lambda (x)
