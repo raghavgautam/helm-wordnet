@@ -91,6 +91,7 @@
     (candidates . helm-dict-get-candidates)
     (action . (("Dictionary" . helm-dict-persistent-action)))
     (persistent-action . helm-dict-persistent-action)
+    (pattern-transformer . downcase)
     (keymap . ,helm-map)
     (follow . 1)
     (follow-delay . ,helm-dict-follow-delay)
@@ -102,7 +103,7 @@
   (interactive)
   (helm :sources 'helm-dict-suggest-source
 	:buffer "*helm dictionary*"
-	:input (downcase (thing-at-point 'word))))
+	:input (thing-at-point 'word)))
 
 (provide 'helm-dict)
 ;;; helm-dict ends here
