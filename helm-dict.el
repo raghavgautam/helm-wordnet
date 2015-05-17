@@ -1,23 +1,32 @@
-;;; package --- A helm source for dictionary
-;;
+;;; helm-dict.el --- Helm interface to local dictionary  -*- lexical-binding: t; -*-
+
 ;; Copyright (C) 2015 helm-dict authors
-;;
-;; Author: Raghav Kumar Gautam <raghav@apache.org>
+
+;; Author: Raghav Kumar Gautam <rgautam@apache.com>
 ;; Keywords: Dictionary, WordNet, Emacs, Elisp, Helm
-;;
-;; Released under the GNU General Public License version 3 or later.
-;; See <http://www.gnu.org/licenses/>.
-;;
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;; Enables helm to look up dictionary.
+
+;; Enables look up if dictionary through helm-interface.
 ;; Default configuration works with WordNet on OSX.
 ;; For other dictionaries configure: helm-dict-prog, helm-dict-pre-arg, helm-dict-post-arg & helm-dict-get-wordlist
+
 ;;; Code:
-
 (require 'helm)
-
-(eval-when-compile
-  (require 'cl))
+(require 'cl)
 
 (defcustom helm-dict-follow-delay 1
   "Delay before Dictionary summary popup."
@@ -107,4 +116,4 @@
 	:input (thing-at-point 'word)))
 
 (provide 'helm-dict)
-;;; helm-dict ends here
+;;; helm-dict.el ends here
