@@ -1,6 +1,6 @@
-;;; helm-dict.el --- Helm interface to local dictionary  -*- lexical-binding: t; -*-
+;;; helm-wordnet.el --- Helm interface to local wordnet dictionary  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2015 helm-dict authors
+;; Copyright (C) 2015 helm-wordnet authors
 
 ;; Author: Raghav Kumar Gautam <rgautam@apache.com>
 ;; Keywords: Dictionary, WordNet, Emacs, Elisp, Helm
@@ -21,57 +21,57 @@
 
 ;;; Commentary:
 
-;; Enables look up if dictionary through helm-interface.
+;; Look up wordnet dictionary through helm-interface.
 ;; Default configuration works with WordNet on OSX.
-;; For other dictionaries configure: helm-dict-prog, helm-dict-pre-arg, helm-dict-post-arg & helm-dict-get-wordlist
+;; For other dictionaries configure: helm-wordnet-prog, helm-wordnet-pre-arg, helm-wordnet-post-arg & helm-wordnet-get-wordlist
 
 ;;; Code:
 (require 'helm)
 (require 'cl)
 
-(defcustom helm-dict-follow-delay 1
-  "Delay before Dictionary summary popup."
+(defcustom helm-wordnet-follow-delay 1
+  "Delay before Dictionary summary pops up."
   :type 'number
-  :group 'helm-dict)
+  :group 'helm-wordnet)
 
-(defcustom helm-dict-wordnet-location "/opt/local/share/WordNet-3.0/dict"
-  "Delay before Dictionary summary popup."
+(defcustom helm-wordnet-wordnet-location "/opt/local/share/WordNet-3.0/dict"
+  "Location of wordnet index files."
   :type 'string
-  :group 'helm-dict)
+  :group 'helm-wordnet)
 
-(defcustom helm-dict-prog "wn"
-  "Name of the Dictionary program."
+(defcustom helm-wordnet-prog "wn"
+  "Name of the Wordnet Dictionary program."
   :type 'string
-  :group 'helm-dict)
+  :group 'helm-wordnet)
 
-(defcustom helm-dict-pre-arg ""
+(defcustom helm-wordnet-pre-arg ""
   "Argument to Dictionary program after command and before the word."
   :type 'string
-  :group 'helm-dict)
+  :group 'helm-wordnet)
 
-(defcustom helm-dict-post-arg "-over"
+(defcustom helm-wordnet-post-arg "-over"
   "Argument to Dictionary program after the word."
   :type 'string
-  :group 'helm-dict)
+  :group 'helm-wordnet)
 
-(defcustom helm-dict-get-wordlist 'helm-dict-wordnet-wordlist
+(defcustom helm-wordnet-get-wordlist 'helm-wordnet-wordnet-wordlist
   "Function for getting list of words in dictionary."
   :type 'symbol-function
-  :group 'helm-dict)
+  :group 'helm-wordnet)
 
-(defvar helm-dict-allwords nil
+(defvar helm-wordnet-allwords nil
   "List of all the words available in the Dictionary.")
 
-;;(helm-dict-get-candidates)
-(defun helm-dict-get-candidates ()
+;;(helm-wordnet-get-candidates)
+(defun helm-wordnet-get-candidates ()
   "Fetch Dictionary suggestions and return them as a list."
-  (unless (bound-and-true-p helm-dict-allwords)
-    (setq helm-dict-allwords (funcall helm-dict-get-wordlist)))
-  helm-dict-allwords)
+  (unless (bound-and-true-p helm-wordnet-allwords)
+    (setq helm-wordnet-allwords (funcall helm-wordnet-get-wordlist)))
+  helm-wordnet-allwords)
 
-(defun helm-dict-wordnet-wordlist ()
+(defun helm-wordnet-wordnet-wordlist ()
   "Fetch WordNet suggestions and return them as a list."
-  (let* ((all-indexes (directory-files helm-dict-wordnet-location t "index\\..*" ))
+  (let* ((all-indexes (directory-files helm-wordnet-wordnet-location t "index\\..*" ))
 	 (word-indexes (remove-if (lambda (x) (string-match-p "index\\.sense$" x)) all-indexes)))
     (mapcan
      (lambda (x)
@@ -83,38 +83,38 @@
 	 (split-string (buffer-string) "\n" t)))
      word-indexes)))
 
-;;(helm-dict-persistent-action "test")
-(defun helm-dict-persistent-action (word)
+;;(helm-wordnet-persistent-action "test")
+(defun helm-wordnet-persistent-action (word)
   "Display meaning of WORD."
   (let ((buf (get-buffer-create "*Dictionary*")))
     (with-current-buffer buf
       (read-only-mode -1)
       (erase-buffer)
       (setq cursor-type nil)
-      (insert (shell-command-to-string (format "%s %s %s %s" helm-dict-prog helm-dict-pre-arg word helm-dict-post-arg)))
+      (insert (shell-command-to-string (format "%s %s %s %s" helm-wordnet-prog helm-wordnet-pre-arg word helm-wordnet-post-arg)))
       (fill-region (point-min) (point-max))
       (goto-char (point-min))
       (read-only-mode 1)
       (display-buffer buf))))
 
-(defvar helm-dict-suggest-source
+(defvar helm-wordnet-suggest-source
   `((name . "Dictionary Suggest")
-    (candidates . helm-dict-get-candidates)
-    (action . (("Dictionary" . helm-dict-persistent-action)))
-    (persistent-action . helm-dict-persistent-action)
+    (candidates . helm-wordnet-get-candidates)
+    (action . (("Dictionary" . helm-wordnet-persistent-action)))
+    (persistent-action . helm-wordnet-persistent-action)
     (pattern-transformer . downcase)
     (keymap . ,helm-map)
     (follow . 1)
-    (follow-delay . ,helm-dict-follow-delay)
+    (follow-delay . ,helm-wordnet-follow-delay)
     (requires-pattern . 1)))
 
 ;;;###autoload
-(defun helm-dict-suggest ()
+(defun helm-wordnet-suggest ()
   "Preconfigured `helm' for Dictionary lookup with Dictionary suggest."
   (interactive)
-  (helm :sources 'helm-dict-suggest-source
+  (helm :sources 'helm-wordnet-suggest-source
 	:buffer "*helm dictionary*"
 	:input (thing-at-point 'word)))
 
-(provide 'helm-dict)
-;;; helm-dict.el ends here
+(provide 'helm-wordnet)
+;;; helm-wordnet.el ends here
