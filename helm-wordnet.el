@@ -116,5 +116,7 @@
 	:buffer "*helm dictionary*"
 	:input (thing-at-point 'word)))
 
+(defalias 'helm-wordnet 'helm-wordnet-suggest)
+
 (provide 'helm-wordnet)
 ;;; helm-wordnet.el ends here
