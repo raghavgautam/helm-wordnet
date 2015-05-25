@@ -4,7 +4,7 @@
 
 ;; Author: Raghav Kumar Gautam <rgautam@apache.com>
 ;; Keywords: Dictionary, WordNet, Emacs, Elisp, Helm
-;; Package-Requires: ((emacs "24") (helm "1.7.0"))
+;; Package-Requires: ((emacs "24") (helm "1.7.0") (cl-lib "0.5"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 
 ;;; Code:
 (require 'helm)
-(require 'cl)
+(require 'cl-lib)
 
 (defcustom helm-wordnet-follow-delay 1
   "Delay before Dictionary summary pops up."
@@ -72,8 +72,8 @@
 (defun helm-wordnet-wordnet-wordlist ()
   "Fetch WordNet suggestions and return them as a list."
   (let* ((all-indexes (directory-files helm-wordnet-wordnet-location t "index\\..*" ))
-	 (word-indexes (remove-if (lambda (x) (string-match-p "index\\.sense$" x)) all-indexes)))
-    (mapcan
+	 (word-indexes (cl-remove-if (lambda (x) (string-match-p "index\\.sense$" x)) all-indexes)))
+    (cl-mapcan
      (lambda (x)
        (with-temp-buffer
 	 (insert-file-contents x)
