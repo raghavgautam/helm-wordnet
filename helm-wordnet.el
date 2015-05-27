@@ -3,6 +3,7 @@
 ;; Copyright (C) 2015 helm-wordnet authors
 
 ;; Author: Raghav Kumar Gautam <rgautam@apache.com>
+;; URL: https://github.com/raghavgautam/helm-wordnet
 ;; Keywords: Dictionary, WordNet, Emacs, Elisp, Helm
 ;; Package-Requires: ((emacs "24") (helm "1.7.0") (cl-lib "0.5"))
 
@@ -34,7 +35,12 @@
   :type 'number
   :group 'helm-wordnet)
 
-(defcustom helm-wordnet-wordnet-location "/opt/local/share/WordNet-3.0/dict"
+(defcustom helm-wordnet-wordnet-location
+  (car
+   (cl-delete-if-not
+    'file-exists-p
+    '("/opt/local/share/WordNet-3.0/dict"
+      "/usr/local/Cellar/wordnet/3.1/dict")))
   "Location of wordnet index files."
   :type 'string
   :group 'helm-wordnet)
@@ -72,7 +78,7 @@
 (defun helm-wordnet-wordnet-wordlist ()
   "Fetch WordNet suggestions and return them as a list."
   (let* ((all-indexes (directory-files helm-wordnet-wordnet-location t "index\\..*" ))
-	 (word-indexes (cl-remove-if (lambda (x) (string-match-p "index\\.sense$" x)) all-indexes)))
+         (word-indexes (cl-remove-if (lambda (x) (string-match-p "index\\.sense$" x)) all-indexes)))
     (cl-mapcan
      (lambda (x)
        (with-temp-buffer
@@ -98,15 +104,14 @@
       (display-buffer buf))))
 
 (defvar helm-wordnet-suggest-source
-  `((name . "Dictionary Suggest")
-    (candidates . helm-wordnet-get-candidates)
-    (action . (("Dictionary" . helm-wordnet-persistent-action)))
-    (persistent-action . helm-wordnet-persistent-action)
-    (pattern-transformer . downcase)
-    (keymap . ,helm-map)
-    (follow . 1)
-    (follow-delay . ,helm-wordnet-follow-delay)
-    (requires-pattern . 1)))
+  (helm-build-sync-source "Dictionary Suggest"
+    :candidates #'helm-wordnet-get-candidates
+    :action '(("Dictionary" . helm-wordnet-persistent-action))
+    :persistent-action #'helm-wordnet-persistent-action
+    :pattern-transformer #'downcase
+    :follow 1
+    :follow-delay helm-wordnet-follow-delay
+    :requires-pattern 1))
 
 ;;;###autoload
 (defun helm-wordnet-suggest ()
