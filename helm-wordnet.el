@@ -37,10 +37,10 @@
 
 (defcustom helm-wordnet-wordnet-location
   (car
-   (cl-delete-if-not
-    'file-exists-p
-    '("/opt/local/share/WordNet-3.0/dict"
-      "/usr/local/Cellar/wordnet/3.1/dict")))
+   (cl-union (file-expand-wildcards "/opt/local/share/WordNet*/dict")
+	     (file-expand-wildcards "/usr/local/Cellar/wordnet/*/dict")
+	     ;;TODO Add suitable paths for Windows and Linux.
+	     ))
   "Location of wordnet index files."
   :type 'string
   :group 'helm-wordnet)
