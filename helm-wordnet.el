@@ -50,6 +50,11 @@
   :type 'string
   :group 'helm-wordnet)
 
+(defcustom helm-wordnet-buffer "*Dictionary*"
+  "Name of the Wordnet Dictionary program."
+  :type 'string
+  :group 'helm-wordnet)
+
 (defcustom helm-wordnet-pre-arg ""
   "Argument to Dictionary program after command and before the word."
   :type 'string
@@ -92,7 +97,7 @@
 ;;(helm-wordnet-persistent-action "test")
 (defun helm-wordnet-persistent-action (word)
   "Display meaning of WORD."
-  (let ((buf (get-buffer-create "*Dictionary*")))
+  (let ((buf (get-buffer-create helm-wordnet-buffer)))
     (with-current-buffer buf
       (read-only-mode -1)
       (erase-buffer)
