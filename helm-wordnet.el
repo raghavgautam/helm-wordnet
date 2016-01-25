@@ -39,6 +39,7 @@
   (car
    (cl-union (file-expand-wildcards "/opt/local/share/WordNet*/dict")
 	     (file-expand-wildcards "/usr/local/Cellar/wordnet/*/dict")
+	     (file-expand-wildcards "/usr/share/wordnet")
 	     ;;TODO Add suitable paths for Windows and Linux.
 	     ))
   "Location of wordnet index files."
