@@ -100,6 +100,7 @@
   "Display meaning of WORD."
   (let ((buf (get-buffer-create helm-wordnet-buffer)))
     (with-current-buffer buf
+      (setq show-trailing-whitespace nil)
       (read-only-mode -1)
       (erase-buffer)
       (setq cursor-type nil)
