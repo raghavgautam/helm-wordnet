@@ -104,10 +104,9 @@
     (with-current-buffer buf
       (read-only-mode -1)
       (erase-buffer)
-      (setq cursor-type nil)
+      (setq cursor-type nil
+	    word-wrap t)
       (insert (shell-command-to-string (format "%s %s %s %s" helm-wordnet-prog helm-wordnet-pre-arg word helm-wordnet-post-arg)))
-      (fill-region (point-min) (point-max))
-      (goto-char (point-min))
       (read-only-mode 1)
       (display-buffer buf))))
 
