@@ -37,11 +37,13 @@
 
 (defcustom helm-wordnet-wordnet-location
   (car
-   (cl-union (file-expand-wildcards "/opt/local/share/WordNet*/dict")
-	     (file-expand-wildcards "/usr/local/Cellar/wordnet/*/dict")
-	     (file-expand-wildcards "/usr/share/wordnet")
-	     ;;TODO Add suitable paths for Windows and Linux.
-	     ))
+   (remove nil
+	   (cl-mapcar  (lambda (x) (car (file-expand-wildcards x)))
+		       (list "/opt/local/share/WordNet*/dict" ;;mac port
+			     "/usr/local/Cellar/wordnet/*/dict" ;;homebrew
+			     "/usr/share/wordnet*" ;;linux
+			     ;;TODO Add suitable paths for other operating system
+			     ))))
   "Location of wordnet index files."
   :type 'string
   :group 'helm-wordnet)
